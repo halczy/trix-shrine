@@ -1,9 +1,28 @@
-<p id="notice"><%= notice %></p>
+<p id="alert"><%= notice %></p>
 
-<p>
-  <strong>Content:</strong>
-  <%= @post.content %>
-</p>
+<div class="row">
+  <div class="col">
+  <%= link_to 'Edit', edit_post_path(@post), class: 'btn btn-warning' %>
+  <%= link_to 'Back', posts_path, class: 'btn btn-info' %>
+  </div>
+</div>
 
-<%= link_to 'Edit', edit_post_path(@post) %> |
-<%= link_to 'Back', posts_path %>
+<div class="row mt-2">
+  <div class="col">
+    <div class="jumbotron">
+      <strong>Raw Content:</strong>
+      <p>
+        <%= @post.content %>
+      </p>
+    </div>
+  </div>
+  <div class="col">
+    <div class="jumbotron">
+      <strong>Rendered Content:</strong>
+      <p>
+        <%= @post.content.html_safe %>
+      </p>
+    </div>
+  </div>
+</div>
+

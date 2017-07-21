@@ -1,8 +1,8 @@
-<p id="notice"><%= notice %></p>
+<p id="alert"><%= notice %></p>
 
 <h1>Posts</h1>
 
-<table>
+<table class="table table-hover table-responsive">
   <thead>
     <tr>
       <th>Content</th>
@@ -13,10 +13,13 @@
   <tbody>
     <% @posts.each do |post| %>
       <tr>
-        <td><%= post.content %></td>
-        <td><%= link_to 'Show', post %></td>
-        <td><%= link_to 'Edit', edit_post_path(post) %></td>
-        <td><%= link_to 'Destroy', post, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= post.content.truncate(100) %></td>
+        <td><%= link_to 'Show', post, class: 'btn btn-sm btn-info' %></td>
+        <td><%= link_to 'Edit', edit_post_path(post),
+                                class: 'btn btn-sm btn-warning' %></td>
+        <td><%= link_to 'Destroy', post, method: :delete,
+                                   data: { confirm: 'Are you sure?' },
+                                   class: 'btn btn-sm btn-danger' %></td>
       </tr>
     <% end %>
   </tbody>
@@ -24,4 +27,4 @@
 
 <br>
 
-<%= link_to 'New Post', new_post_path %>
+<%= link_to 'New Post', new_post_path, class: 'btn btn-primary' %>
