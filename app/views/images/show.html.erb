@@ -1,0 +1,23 @@
+<p id="alert"><%= notice %></p>
+
+<div class="row">
+  <div class="col">
+    <%= link_to 'Edit', edit_image_path(@image), class: 'btn btn-warning' %>
+    <%= link_to 'Back', images_path, class: 'btn btn-info' %>
+  </div>
+</div>
+
+<div class="row mt-2">
+  <div class="col">
+    <div class="jumbotron">
+      <strong>Raw Image Data:</strong>
+      <p><%= @image.image_data %></p>
+    </div>
+  </div>
+  <div class="col">
+    <div class="jumbotron">
+      <strong>Image:</strong>
+      <p><%= image_tag @image.image_url, class: 'img-fluid' %></p>
+    </div>
+  </div>
+</div>
