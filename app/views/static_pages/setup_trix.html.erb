@@ -1,0 +1,160 @@
+<div class="row m-5">
+  <div class="row">
+    <div class="col-lg-12">
+      <h3>1. Setup Trix Editor Gem</h3>
+    </div>
+  </div>
+</div>
+
+<div class="row ml-5 mr-5">
+  <div class="col-lg-4 mb-3">
+    <div class="card">
+      <div class="card-header text-muted">
+        Gemfile
+      </div>
+      <div class="card-block">
+        <pre><code class="ruby rounded">
+gem 'trix', '~> 0.10.2'
+        </code></pre>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4 mb-3">
+    <div class="card">
+      <div class="card-header text-muted">
+        Command Line
+      </div>
+      <div class="card-block">
+        <pre><code class="bash rounded">
+$ bundle install
+        </code></pre>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4 mb-3">
+    <div class="card">
+      <div class="card-header text-muted">
+        app/assets/javascripts/application.js
+      </div>
+      <div class="card-block">
+        <pre><code class="js rounded">
+//= require trix
+        </code></pre>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4 mb-3">
+    <div class="card">
+      <div class="card-header text-muted">
+        app/assets/stylesheets/application.css
+      </div>
+      <div class="card-block">
+        <pre><code class="css rounded">
+*= require trix
+        </code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row m-5">
+  <h3>2. Use Trix Editor with Form Helper</h3>
+</div>
+
+<div class="row ml-5 mr-5">
+  <div class="col-lg-4 mb-3">
+    <div class="card">
+      <div class="card-header text-muted">
+        Command Line (Optional Step)
+      </div>
+      <div class="card-block">
+        <p>
+          We will generate a Post scaffold for demonstration purpose only. You
+          can use Trix Editor with any text field.
+        </p>
+        <pre><code class="ruby rounded">
+rails g scaffold Post content:text
+        </code></pre>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4 mb-3">
+    <div class="card">
+      <div class="card-header text-muted">
+        app/views/posts/_form.html.erb
+      </div>
+      <div class="card-block">
+        <pre><code class="erb rounded">
+<%%= form.trix_editor :content, class: 'trix-content' %>
+        </code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row m-5">
+  <h3>3. RSpec/Capybara Test Helper (Optional)</h3>
+</div>
+
+<div class="row ml-5 mr-5">
+  <div class="col-lg-4 mb-3">
+    <div class="card">
+      <div class="card-header text-muted">
+        spec/support/javascript.rb
+      </div>
+      <div class="card-block">
+        <pre><code class="ruby rounded">
+module JavascriptHelper
+ def fill_in_trix_editor(id, value)
+   find(:xpath, "//*[@id='#{id}']", visible: false).set(value)
+ end
+end
+        </code></pre>
+      <p>
+        Credit: <%= link_to 'http://xanbei.com/post/136382337613/how-to-test-basecamps-trix-editor-with-rspec',
+                            'http://xanbei.com/post/136382337613/how-to-test-basecamps-trix-editor-with-rspec' %>
+      </p>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4 mb-3">
+    <div class="card">
+      <div class="card-header text-muted">
+        spec/rails_helper.rb
+      </div>
+      <div class="card-block">
+        <pre><code class="ruby rounded">
+Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
+
+RSpec.configure do |config|
+  # JavaScript Helper for Trix Editor
+  config.include(JavascriptHelper, type: :feature)
+end
+        </code></pre>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4 mb-3">
+    <div class="card">
+      <div class="card-header text-muted">
+        spec/features/content_with_trix_editor_spec.rb
+      </div>
+      <div class="card-block">
+        <pre><code class="ruby rounded">
+ require 'rails_helper'
+
+ feature "Content Creation" do
+
+   scenario "User can write content and post it" do
+     visit "posts/new"
+     fill_in_trix_editor "trix_input_post", with: "This is a sample post"
+     click_on('Create Post')
+     expect(page).to have_content('This is a sample post')
+   end
+
+ end
+        </code></pre>
+      </div>
+    </div>
+  </div>
+</div>
