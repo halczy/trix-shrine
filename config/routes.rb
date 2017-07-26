@@ -4,6 +4,7 @@ Rails.application.routes.draw do
 
   get 'static_pages/home'
   get 'static_pages/setup_trix'
+  get 'static_pages/setup_shrine'
   resources :posts
   resources :images
 end
