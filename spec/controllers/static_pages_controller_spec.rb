@@ -9,4 +9,11 @@ RSpec.describe StaticPagesController, type: :controller do
     end
   end
 
+  describe "GET #setup_trix" do
+    it 'returns http success' do
+      get :setup_trix
+      expect(response).to have_http_status(:success)
+    end
+  end
+
 end
