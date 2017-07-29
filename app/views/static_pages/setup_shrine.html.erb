@@ -1,0 +1,273 @@
+<div class="row m-5">
+  <div class="row">
+    <div class="col-lg-12">
+      <h3>1. Install Shrine Gem</h3>
+    </div>
+  </div>
+</div>
+
+<div class="row ml-5 mr-5">
+  <div class="col-lg-4 mb-3">
+    <div class="card">
+      <div class="card-header text-muted">
+        Gemfile
+      </div>
+      <div class="card-block">
+        <pre><code class="ruby rounded">
+gem 'shrine', '~> 2.6', '>= 2.6.1'
+
+# Optional
+group :test do
+  gem 'shrine-memory', '~> 0.3.0'
+end
+        </code></pre>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4 mb-3">
+    <div class="card">
+      <div class="card-header text-muted">
+        Command Line
+      </div>
+      <div class="card-block">
+        <pre><code class="bash rounded">
+$ bundle install
+        </code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row m-5">
+  <div class="row">
+    <div class="col-lg-12">
+      <h3>2. Setup Shrine Configuration File</h3>
+    </div>
+  </div>
+</div>
+
+<div class="row ml-5 mr-5">
+  <div class="col-lg-6 mb-3">
+    <div class="card">
+      <div class="card-header text-muted">
+        config/initializers/shrine.rb
+      </div>
+      <div class="card-block">
+        <pre><code class="ruby rounded">
+require "shrine"
+require "shrine/storage/file_system"
+
+Shrine.plugin :activerecord
+
+Shrine.storages = {
+ cache: Shrine::Storage::FileSystem.new("public", prefix: "uploads/cache"),
+ store: Shrine::Storage::FileSystem.new("public", prefix: "uploads/store"),
+}
+        </code></pre>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4 mb-3">
+    <div class="card">
+      <div class="card-header text-muted">
+        app/uploaders/image_uploader.rb
+      </div>
+      <div class="card-block">
+        <pre><code class="ruby rounded">
+class ImageUploader < Shrine
+end
+        </code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row m-5">
+  <div class="row">
+    <div class="col-lg-12">
+      <h3>3. Enable File Validation</h3>
+    </div>
+  </div>
+</div>
+
+<div class="row ml-5 mr-5">
+  <div class="col-lg-5 mb-3">
+    <div class="card">
+      <div class="card-header text-muted">
+        app/uploaders/image_uploader.rb
+      </div>
+      <div class="card-block">
+        <p>
+          This is set to limit file upload size to 5MB and only accept jpg,
+          jpeg, and png. You can change these values to your liking.
+        </p>
+        <pre><code class="ruby rounded">
+class ImageUploader < Shrine
+  plugin :determine_mime_type
+  plugin :validation_helpers
+
+  # Validation
+  Attacher.validate do
+    validate_max_size 5.megabyte, message: "is too large (max is 5 MB)"
+    validate_mime_type_inclusion ['image/jpg', 'image/jpeg', 'image/png']
+  end
+end
+        </code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row m-5">
+  <div class="row">
+    <div class="col-lg-12">
+      <h3>4. Create Image Model</h3>
+    </div>
+  </div>
+</div>
+
+<div class="row ml-5 mr-5">
+  <div class="col-lg-4 mb-3">
+    <div class="card">
+      <div class="card-header text-muted">
+        Command Line
+      </div>
+      <div class="card-block">
+        <pre><code class="bash rounded">
+rails g model Image image_data:text
+        </code></pre>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4 mb-3">
+    <div class="card">
+      <div class="card-header text-muted">
+        db/migrate/20170721120530_create_images.rb
+      </div>
+      <div class="card-block">
+        <p>
+          This is the migration file generated from the previous command line
+          generator.
+        </p>
+        <pre><code class="ruby rounded">
+class CreateImages < ActiveRecord::Migration[5.1]
+  def change
+    create_table :images do |t|
+      t.text :image_data
+
+      t.timestamps
+    end
+  end
+end
+        </code></pre>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4 mb-3">
+    <div class="card">
+      <div class="card-header text-muted">
+        app/models/image.rb
+      </div>
+      <div class="card-block">
+        <pre><code class="ruby rounded">
+class Image < ApplicationRecord
+  include ImageUploader::Attachment.new(:image)
+end
+        </code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row m-5">
+  <div class="row">
+    <div class="col-lg-12">
+      <h3>5. Create Image Scaffold (Optional)</h3>
+    </div>
+  </div>
+</div>
+
+<div class="row ml-5 mr-5">
+  <div class="col-lg-4 mb-3">
+    <div class="card">
+      <div class="card-header text-muted">
+        Command Line
+      </div>
+      <div class="card-block">
+        <pre><code class="bash rounded">
+rails g scaffold Image image_data:text
+        </code></pre>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4 mb-3">
+    <div class="card">
+      <div class="card-header text-muted">
+        app/views/images/_form.html.erb
+      </div>
+      <div class="card-block">
+        <p>
+          We created the "image" virtual attribute our model file.
+        </p>
+        <pre><code class="erb rounded">
+<%%= form.file_field :image, class: 'form-control' %>
+        </code></pre>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4 mb-3">
+    <div class="card">
+      <div class="card-header text-muted">
+        app/controllers/images_controller.rb
+      </div>
+      <div class="card-block">
+        <pre><code class="ruby rounded">
+private
+
+  def image_params
+    params.require(:image).permit(:image)
+  end
+        </code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row m-5">
+  <div class="row">
+    <div class="col-lg-12">
+      <h3>6. RSpec / FactoryGirl File Upload Testing Tips</h3>
+    </div>
+  </div>
+</div>
+
+<div class="row ml-5 mr-5">
+  <div class="col-lg-8 mb-3">
+    <div class="card">
+      <div class="card-header text-muted">
+        spec/controllers/images_controller_spec.rb
+      </div>
+      <div class="card-block">
+        <pre><code class="ruby rounded">
+post :create, params: { image: { image: fixture_file_upload('spec/files/test-image.jpeg', 'image/jpeg') }
+        </code></pre>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4 mb-3">
+    <div class="card">
+      <div class="card-header text-muted">
+        spec/factories/images.rb
+      </div>
+      <div class="card-block">
+        <pre><code class="ruby rounded">
+FactoryGirl.define do
+  factory :image do
+    image { File.open("spec/files/test-image.png") }
+  end
+end
+        </code></pre>
+      </div>
+    </div>
+  </div>
+</div>
